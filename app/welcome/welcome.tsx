@@ -2,6 +2,7 @@ import { Form, useNavigation } from "react-router";
 
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
+import { authClient } from "~/lib/auth-client"
 
 export function Welcome({
   guestBook,
@@ -17,9 +18,16 @@ export function Welcome({
 }) {
   const navigation = useNavigation();
 
+  const {
+    data: session,
+  } = authClient.useSession()
+
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
+        {session && <div>
+          <p>{session.user.name}</p>
+        </div>}
         <header className="flex flex-col items-center gap-9">
           <h1 className="sr-only">{message}</h1>
           <div className="w-[500px] max-w-[100vw] p-4">
@@ -106,6 +114,16 @@ export function Welcome({
             </ul>
           </section>
         </div>
+        <button
+          onClick={async () => {
+            await authClient.signIn.social({ provider: "google" });
+          }}
+          type="button"
+          disabled={navigation.state === "submitting"}
+          className="w-full h-10 px-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+        >
+          Sign in with google
+        </button>
       </div>
     </main>
   );
