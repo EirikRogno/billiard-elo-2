@@ -18,6 +18,7 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  eloRating: integer("elo_rating").default(1000).notNull(),
 });
 
 export const session = pgTable(

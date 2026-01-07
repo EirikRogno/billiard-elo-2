@@ -1,17 +1,16 @@
+import { userContext } from "~/context";
+import type { Route } from "./+types/register";
+import type { Route as RootRoute } from "../+types/root";
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
-
-import type { Route } from "./+types/home";
-import type { Route as RootRoute } from "../+types/root";
 import { authMiddleware } from "~/middleware/auth";
-import { FrontPage } from "~/frontPage/frontPage";
-import { userContext } from "~/context";
+import { RegisterMatch } from "~/registerMatch/registerMatch";
 import { redirect } from "react-router";
+import { not, eq } from "drizzle-orm"
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Biljard ELO | Registrer kamp" },
   ];
 }
 
@@ -40,16 +39,22 @@ export async function action({ request }: Route.ActionArgs) {
 export async function loader({ context }: Route.LoaderArgs) {
   const session = context.get(userContext);
 
+  const db = database()
+  const users = await db.select({ name: schema.user.name, id: schema.user.id })
+    .from(schema.user)
+    .where(not(eq(schema.user.id, session?.user.id || "")))
+
   return {
-    session
+    session,
+    users
   };
 }
 
 export const middleware: RootRoute.MiddlewareFunction[] = [authMiddleware]
 
-export default function Home({ actionData, loaderData }: Route.ComponentProps) {
+export default function Register({ actionData, loaderData }: Route.ComponentProps) {
   if (!loaderData.session) { throw redirect("/") }
   return (
-    <FrontPage session={loaderData.session} />
+    <RegisterMatch session={loaderData.session} users={loaderData.users} />
   );
 }
