@@ -5,7 +5,7 @@ import { redirect } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Biljard ELO | Logg inn" },
+    { title: "Biljard Elo | Logg inn" },
   ];
 }
 

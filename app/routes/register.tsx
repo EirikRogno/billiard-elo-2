@@ -1,9 +1,7 @@
 import { userContext } from "~/context";
 import type { Route } from "./+types/register";
-import type { Route as RootRoute } from "../+types/root";
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
-import { authMiddleware } from "~/middleware/auth";
 import { RegisterMatch } from "~/registerMatch/registerMatch";
 import { redirect } from "react-router";
 import { not, eq } from "drizzle-orm"
@@ -11,7 +9,7 @@ import { newEloForPlayer } from "~/lib/eloService";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Biljard ELO | Registrer kamp" },
+    { title: "Biljard Elo | Registrer kamp" },
   ];
 }
 
@@ -69,8 +67,6 @@ export async function loader({ context }: Route.LoaderArgs) {
     users
   };
 }
-
-export const middleware: RootRoute.MiddlewareFunction[] = [authMiddleware]
 
 export default function Register({ loaderData }: Route.ComponentProps) {
   if (!loaderData.session) { throw redirect("/") }
