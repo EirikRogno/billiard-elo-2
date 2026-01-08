@@ -7,6 +7,7 @@ import { authMiddleware } from "~/middleware/auth";
 import { RegisterMatch } from "~/registerMatch/registerMatch";
 import { redirect } from "react-router";
 import { not, eq } from "drizzle-orm"
+import { newEloForPlayer } from "~/lib/eloService";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -14,25 +15,44 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action({ request, context }: Route.ActionArgs) {
+  const session = context.get(userContext);
   const formData = await request.formData();
-  let name = formData.get("name");
-  let email = formData.get("email");
-  if (typeof name !== "string" || typeof email !== "string") {
-    return { guestBookError: "Name and email are required" };
+  const userId = session?.user.id
+  let opponentId = formData.get("opponentId");
+  let winnerId = formData.get("winnerId");
+  if (typeof winnerId !== "string" || typeof opponentId !== "string") {
+    return { submitError: "Winner and opponent are required" };
   }
 
-  name = name.trim();
-  email = email.trim();
-  if (!name || !email) {
-    return { guestBookError: "Name and email are required" };
+  opponentId = opponentId.trim();
+  winnerId = winnerId.trim();
+  if (!opponentId || !winnerId || !userId) {
+    return { submitError: "Winner and opponent are required" };
   }
 
   const db = database();
   try {
-    await db.insert(schema.guestBook).values({ name, email });
+    const opponent = (await db.select().from(schema.user).where(eq(schema.user.id, opponentId)))[0]
+    const matchInsert = await db.insert(schema.match).values({ winner: winnerId }).returning({ id: schema.match.id });
+    const matchId = matchInsert[0].id
+    await db.insert(schema.matchParticipant).values({ matchId, userId: opponentId });
+    await db.insert(schema.matchParticipant).values({ matchId, userId });
+
+    const userElo = session?.user.eloRating || 1000;
+    const newEloPlayer = newEloForPlayer(userElo, opponent.eloRating, winnerId === userId ? 1 : 0)
+    const newEloOpponent = newEloForPlayer(opponent.eloRating, userElo, winnerId === opponentId ? 1 : 0)
+
+    await db.update(schema.user).set({ eloRating: newEloPlayer }).where(eq(schema.user.id, userId));
+    await db.update(schema.user).set({ eloRating: newEloOpponent }).where(eq(schema.user.id, opponentId));
+
+    console.log("New elo:", opponent.name, newEloOpponent);
+    console.log("New elo:", session?.user.name, newEloPlayer);
+
+    return redirect("/")
   } catch (error) {
-    return { guestBookError: "Error adding to guest book" };
+    console.error(error);
+    return { submitError: "Error updating database" };
   }
 }
 
@@ -52,7 +72,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export const middleware: RootRoute.MiddlewareFunction[] = [authMiddleware]
 
-export default function Register({ actionData, loaderData }: Route.ComponentProps) {
+export default function Register({ loaderData }: Route.ComponentProps) {
   if (!loaderData.session) { throw redirect("/") }
   return (
     <RegisterMatch session={loaderData.session} users={loaderData.users} />

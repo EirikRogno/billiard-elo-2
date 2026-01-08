@@ -1,11 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text, timestamp, boolean, index, varchar } from "drizzle-orm/pg-core";
-
-export const guestBook = pgTable("guestBook", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
-});
+import { integer, pgTable, text, timestamp, boolean, index, uuid, primaryKey } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -20,6 +14,28 @@ export const user = pgTable("user", {
     .notNull(),
   eloRating: integer("elo_rating").default(1000).notNull(),
 });
+
+export const match = pgTable("match", {
+  id: uuid().primaryKey().defaultRandom(),
+  winner: text().references(() => user.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const matchParticipant = pgTable("matchParticipant", {
+  matchId: uuid("match_id").references(() => match.id),
+  userId: text("user_id").references(() => user.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, (table) => [
+  primaryKey({ columns: [table.matchId, table.userId] })
+])
 
 export const session = pgTable(
   "session",
