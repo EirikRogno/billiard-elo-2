@@ -3,6 +3,8 @@ import type { Route } from "./+types/layout";
 import type { Route as RootRoute } from "../+types/root";
 import { userContext } from "~/context";
 import { authMiddleware } from "~/middleware/auth";
+import { WebstepPositiveLogo } from "~/components/logo/WebstepPositive";
+import { Header } from "~/components/header";
 
 export async function loader({ context }: Route.LoaderArgs) {
   const session = context.get(userContext);
@@ -17,14 +19,11 @@ export const middleware: RootRoute.MiddlewareFunction[] = [authMiddleware]
 export default function Layout({ loaderData }: Route.ComponentProps) {
   if (!loaderData.session) { throw redirect("/") }
 
-  return (<>
-    <header>
-      <div>
-        <p>{loaderData.session?.user.name}</p>
-      </div>
-    </header>
-    <main className="h-full">
+  return (<div className="bg-light-sky min-h-screen flex justify-between flex-col">
+    <Header name={loaderData.session.user.name} avatarUrl={loaderData.session.user.image} />
+    <main className="grow flex flex-col justify-center items-center">
       <Outlet />
     </main>
-  </>)
+    <footer className="static bottom-0 bg-light-sky p-2"><div className="w-50"><WebstepPositiveLogo /></div></footer>
+  </div>)
 }

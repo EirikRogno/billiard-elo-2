@@ -5,7 +5,7 @@ import { redirect } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Biljard Elo | Hjem" },
+    { title: "Biljard App | Hjem" },
   ];
 }
 
@@ -18,7 +18,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  if (!loaderData.session) { throw redirect("/") }
+  if (!loaderData.session) { throw redirect("/login") }
   return (
     <FrontPage session={loaderData.session} />
   );

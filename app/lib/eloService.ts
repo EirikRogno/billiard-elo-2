@@ -1,4 +1,3 @@
-
 const expectedResult = (player1Elo: number, player2Elo: number): number => {
   return 1 / (1 + Math.pow(10, ((player2Elo - player1Elo) / 400)));
 }

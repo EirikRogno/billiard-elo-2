@@ -10,7 +10,7 @@ export const authMiddleware: Route.MiddlewareFunction = async ({
   const user = session?.user;
 
   if (!user) {
-    throw redirect("/");
+    throw redirect("/login");
   }
 
   context.set(userContext, session);

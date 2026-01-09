@@ -9,11 +9,12 @@ import { newEloForPlayer } from "~/lib/eloService";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Biljard Elo | Registrer kamp" },
+    { title: "Biljard App | Registrer kamp" },
   ];
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
+  console.log("action");
   const session = context.get(userContext);
   const formData = await request.formData();
   const userId = session?.user.id
@@ -69,7 +70,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Register({ loaderData }: Route.ComponentProps) {
-  if (!loaderData.session) { throw redirect("/") }
+  if (!loaderData.session) { throw redirect("/login") }
   return (
     <RegisterMatch session={loaderData.session} users={loaderData.users} />
   );

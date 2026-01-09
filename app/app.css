@@ -3,16 +3,37 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: GreedStandardRegular;
+  src: url('../fonts/GreedStandard-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: ModeratSerifLight;
+  src: url('../fonts/Moderat-Serif-Light-3.otf') format('opentype');
+}
+
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-light-sky: #a2f0f8;
+  --color-sand: #d6c8ac;
+  --color-black: #1a1a1a;
+  --color-white: #ffffff;
+  --color-sky: #3685fd;
+  --color-earth: #563b1e;
+  --color-moss: #3e4f35;
+  --color-strawberry: #fd4b6e;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
-
   height: 100%;
+  @apply bg-white dark:bg-gray-950;
+  font-family: GreedStandardRegular;
+
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
