@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { authClient } from "~/lib/auth-client"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
@@ -16,7 +16,8 @@ export function Header({ avatarUrl, name }: { avatarUrl?: string | null, name: s
         <p>{name}</p>
       </div>
       <div>
-        <Button variant="link"
+        <Button
+          variant="link"
           onClick={async () => {
             await authClient.signOut({
               fetchOptions: {
