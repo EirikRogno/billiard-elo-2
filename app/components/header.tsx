@@ -1,34 +1,60 @@
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { authClient } from "~/lib/auth-client"
-import { Avatar, AvatarImage } from "./ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
 import { Separator } from "./ui/separator";
+import { MenuIcon } from "lucide-react";
+import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
+import { ButtonGroup, ButtonGroupSeparator } from "./ui/button-group";
+import { useState } from "react";
 
 export function Header({ avatarUrl, name }: { avatarUrl?: string | null, name: string }) {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <header className="">
       <div className="p-2 flex justify-between items-center">
-        <div className="flex gap-2 items-center">
-          {avatarUrl &&
-            <Avatar>
-              <AvatarImage src={avatarUrl} alt="User profile picture" />
-            </Avatar>
-          }
-          <p>{name}</p>
-        </div>
-        <div>
-          <Button
-            variant="link"
-            onClick={async () => {
-              await authClient.signOut({
-                fetchOptions: {
-                  onSuccess: () => { navigate("/") }
-                }
-              })
-            }}
-          >Logg ut</Button>
-        </div>
+        <Link to="/">
+          <div className="flex gap-2 items-center">
+            {avatarUrl &&
+              <Avatar>
+                <AvatarImage src={avatarUrl} alt="User profile picture" />
+                <AvatarFallback>{name.substring(0, 2)}</AvatarFallback>
+              </Avatar>
+            }
+            <p>{name}</p>
+          </div>
+        </Link>
+        <Drawer direction="top" open={menuOpen} onOpenChange={setMenuOpen}>
+          <DrawerTrigger>
+            <Button variant="ghost">
+              <MenuIcon />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <ButtonGroup orientation="vertical" className="flex flex-col items-center w-full">
+              <Button
+                variant="link"
+                asChild
+                onClick={() => setMenuOpen(false)}
+              >
+                <Link to="/history">Kamphistorikk</Link>
+              </Button>
+              <ButtonGroupSeparator orientation="horizontal" />
+              <Button
+                variant="link"
+                onClick={async () => {
+                  await authClient.signOut({
+                    fetchOptions: {
+                      onSuccess: () => { navigate("/") }
+                    }
+                  })
+                  setMenuOpen(false);
+                }}
+              >Logg ut</Button>
+            </ButtonGroup>
+          </DrawerContent>
+        </Drawer>
       </div>
       <Separator />
     </header>
