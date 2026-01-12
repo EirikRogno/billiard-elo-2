@@ -18,6 +18,7 @@ export const user = pgTable("user", {
 export const match = pgTable("match", {
   id: uuid().primaryKey().defaultRandom(),
   winner: text().references(() => user.id),
+  resultEloDelta: integer("result_elo_delta"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

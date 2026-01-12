@@ -2,10 +2,10 @@ import { userContext } from "~/context";
 import type { Route } from "./+types/register";
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
-import { RegisterMatch } from "~/registerMatch/registerMatch";
+import { RegisterMatch } from "~/components/registerMatch";
 import { redirect } from "react-router";
 import { not, eq } from "drizzle-orm"
-import { newEloForPlayer } from "~/lib/eloService";
+import { calculateEloDelta } from "~/lib/eloService";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -14,7 +14,6 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
-  console.log("action");
   const session = context.get(userContext);
   const formData = await request.formData();
   const userId = session?.user.id
@@ -33,18 +32,21 @@ export async function action({ request, context }: Route.ActionArgs) {
   const db = database();
   try {
     const opponent = (await db.select().from(schema.user).where(eq(schema.user.id, opponentId)))[0]
-    const matchInsert = await db.insert(schema.match).values({ winner: winnerId }).returning({ id: schema.match.id });
+    const userElo = session?.user.eloRating || 1000;
+    const eloDelta = calculateEloDelta(userElo, opponent.eloRating, winnerId === userId ? 1 : 0)
+
+    const matchInsert = await db.insert(schema.match).values({ winner: winnerId, resultEloDelta: Math.abs(eloDelta) }).returning({ id: schema.match.id });
     const matchId = matchInsert[0].id
     await db.insert(schema.matchParticipant).values({ matchId, userId: opponentId });
     await db.insert(schema.matchParticipant).values({ matchId, userId });
 
-    const userElo = session?.user.eloRating || 1000;
-    const newEloPlayer = newEloForPlayer(userElo, opponent.eloRating, winnerId === userId ? 1 : 0)
-    const newEloOpponent = newEloForPlayer(opponent.eloRating, userElo, winnerId === opponentId ? 1 : 0)
+    const newEloPlayer = userElo + eloDelta;
+    const newEloOpponent = opponent.eloRating - eloDelta;
 
     await db.update(schema.user).set({ eloRating: newEloPlayer }).where(eq(schema.user.id, userId));
     await db.update(schema.user).set({ eloRating: newEloOpponent }).where(eq(schema.user.id, opponentId));
 
+    console.log("eloDelta:", eloDelta)
     console.log("New elo:", opponent.name, newEloOpponent);
     console.log("New elo:", session?.user.name, newEloPlayer);
 

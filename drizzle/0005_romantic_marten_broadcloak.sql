@@ -1,0 +1,1 @@
+ALTER TABLE "match" RENAME COLUMN "elo_diff" TO "result_elo_delta";

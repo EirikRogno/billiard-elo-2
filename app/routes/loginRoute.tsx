@@ -1,4 +1,4 @@
-import { Login } from "~/login/login";
+import { Login } from "~/components/login";
 import type { Route } from "./+types/loginRoute";
 import { auth } from "@/lib/auth.server";
 import { redirect } from "react-router";

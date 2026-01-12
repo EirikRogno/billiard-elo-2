@@ -29,6 +29,20 @@
       "when": 1767869291889,
       "tag": "0003_wandering_kulan_gath",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1768210848485,
+      "tag": "0004_opposite_serpent_society",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768210906454,
+      "tag": "0005_romantic_marten_broadcloak",
+      "breakpoints": true
     }
   ]
 }

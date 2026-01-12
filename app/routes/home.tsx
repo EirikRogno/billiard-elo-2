@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { FrontPage } from "~/frontPage/frontPage";
+import { FrontPage } from "~/components/frontPage";
 import { userContext } from "~/context";
 import { redirect } from "react-router";
 
