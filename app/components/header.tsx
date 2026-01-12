@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
 import { Separator } from "./ui/separator";
 import { MenuIcon } from "lucide-react";
-import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "./ui/drawer";
 import { ButtonGroup, ButtonGroupSeparator } from "./ui/button-group";
 import { useState } from "react";
 
@@ -26,12 +26,11 @@ export function Header({ avatarUrl, name }: { avatarUrl?: string | null, name: s
           </div>
         </Link>
         <Drawer direction="top" open={menuOpen} onOpenChange={setMenuOpen}>
-          <DrawerTrigger>
-            <Button variant="ghost">
-              <MenuIcon />
-            </Button>
+          <DrawerTrigger className="p-2 fill-black">
+            <MenuIcon />
           </DrawerTrigger>
           <DrawerContent>
+            <DrawerTitle className="hidden">Meny</DrawerTitle>
             <ButtonGroup orientation="vertical" className="flex flex-col items-center w-full">
               <Button
                 variant="link"

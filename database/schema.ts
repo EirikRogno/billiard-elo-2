@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { integer, pgTable, text, timestamp, boolean, index, uuid, primaryKey } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -19,9 +19,9 @@ export const match = pgTable("match", {
   id: uuid().primaryKey().defaultRandom(),
   winner: text().references(() => user.id),
   resultEloDelta: integer("result_elo_delta"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).notNull(),
   updatedAt: timestamp("updated_at")
-    .defaultNow()
+    .default(sql`CURRENT_TIMESTAMP`)
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });

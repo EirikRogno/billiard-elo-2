@@ -1,6 +1,6 @@
 {
-  "id": "39853ccd-c6a1-43a9-a968-1bbe591e3466",
-  "prevId": "6bf145c1-851c-4a50-a085-9306f05abb25",
+  "id": "6198baed-5189-42f3-ab9a-c3ab0e27eb88",
+  "prevId": "84e5beef-2cd7-4ebc-bd5b-28873ade4d9e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -126,52 +126,136 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.guestBook": {
-      "name": "guestBook",
+    "public.match": {
+      "name": "match",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "guestBook_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
+          "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
+        "winner": {
+          "name": "winner",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
+        "result_elo_delta": {
+          "name": "result_elo_delta",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "match_winner_user_id_fk": {
+          "name": "match_winner_user_id_fk",
+          "tableFrom": "match",
+          "tableTo": "user",
+          "columnsFrom": [
+            "winner"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "guestBook_email_unique": {
-          "name": "guestBook_email_unique",
-          "nullsNotDistinct": false,
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.matchParticipant": {
+      "name": "matchParticipant",
+      "schema": "",
+      "columns": {
+        "match_id": {
+          "name": "match_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "matchParticipant_match_id_match_id_fk": {
+          "name": "matchParticipant_match_id_match_id_fk",
+          "tableFrom": "matchParticipant",
+          "tableTo": "match",
+          "columnsFrom": [
+            "match_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "matchParticipant_user_id_user_id_fk": {
+          "name": "matchParticipant_user_id_user_id_fk",
+          "tableFrom": "matchParticipant",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "matchParticipant_match_id_user_id_pk": {
+          "name": "matchParticipant_match_id_user_id_pk",
           "columns": [
-            "email"
+            "match_id",
+            "user_id"
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -324,6 +408,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "elo_rating": {
+          "name": "elo_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1000
         }
       },
       "indexes": {},

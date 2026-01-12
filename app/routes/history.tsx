@@ -40,6 +40,7 @@ export async function loader({ context }: Route.LoaderArgs) {
       .orderBy(desc(schema.match.createdAt))
       .limit(50);
 
+    console.log(matches);
     return {
       session,
       matches
