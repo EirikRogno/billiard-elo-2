@@ -13,10 +13,9 @@ type Match = {
 }
 
 export function HistoryView({ session, matches }: { session: Session, matches: Match[] }) {
-  console.log(matches);
   return <>
     <h1 className="my-5 text-3xl">Kamphistorikk:</h1>
-    <ItemGroup className="mb-5 gap-2 w-full px-4">
+    <ItemGroup className="mb-5 gap-2 w-full px-4 items-center">
       {matches.map(({ winnerId, matchCreatedAt, matchId, opponentAvatar, opponentName, eloDelta }) => {
         const bg = winnerId === session.user.id ? "bg-lime-400" : "bg-red-400";
         const timeString = new Intl.DateTimeFormat("no", {
@@ -28,7 +27,7 @@ export function HistoryView({ session, matches }: { session: Session, matches: M
           minute: "2-digit",
         }).format(matchCreatedAt);
 
-        return <Item className={`${bg} w-full`} key={matchId}>
+        return <Item className={`${bg} max-w-2xl w-full`} key={matchId}>
           <ItemMedia>
             <Avatar className="size-10">
               <AvatarImage src={opponentAvatar || undefined} />
