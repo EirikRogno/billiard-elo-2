@@ -36,11 +36,40 @@ export function Header({ avatarUrl, name }: { avatarUrl?: string | null, name: s
                 variant="link"
                 asChild
                 onClick={() => setMenuOpen(false)}
+                className="my-4"
+              >
+                <Link to="/">Din rating</Link>
+              </Button>
+              <ButtonGroupSeparator orientation="horizontal" />
+              <Button
+                variant="link"
+                asChild
+                onClick={() => setMenuOpen(false)}
+                className="my-4"
+              >
+                <Link to="/register">Registrer kamp</Link>
+              </Button>
+              <ButtonGroupSeparator orientation="horizontal" />
+              <Button
+                className="my-4"
+                variant="link"
+                asChild
+                onClick={() => setMenuOpen(false)}
               >
                 <Link to="/history">Kamphistorikk</Link>
               </Button>
               <ButtonGroupSeparator orientation="horizontal" />
               <Button
+                className="my-4"
+                variant="link"
+                asChild
+                onClick={() => setMenuOpen(false)}
+              >
+                <Link to="https://no.wikipedia.org/wiki/Elo-rating">Hva er Elo rating?</Link>
+              </Button>
+              <ButtonGroupSeparator orientation="horizontal" />
+              <Button
+                className="my-4"
                 variant="link"
                 onClick={async () => {
                   await authClient.signOut({

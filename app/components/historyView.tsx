@@ -16,6 +16,7 @@ export function HistoryView({ session, matches }: { session: Session, matches: M
   return <>
     <h1 className="my-5 text-3xl">Kamphistorikk:</h1>
     <ItemGroup className="mb-5 gap-2 w-full px-4 items-center">
+      {matches.length === 0 && <h2 className="mt-5">Du har ingen registrerte kamper enda.</h2>}
       {matches.map(({ winnerId, matchCreatedAt, matchId, opponentAvatar, opponentName, eloDelta }) => {
         const bg = winnerId === session.user.id ? "bg-lime-400" : "bg-red-400";
         const timeString = new Intl.DateTimeFormat("no", {
