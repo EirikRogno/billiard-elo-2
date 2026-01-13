@@ -13,9 +13,9 @@ export function RegisterMatch({ session, users }: { session: Session, users: Use
   const [selectedOpponent, setSelectedOpponent] = useState<User>()
   const navigation = useNavigation();
 
-  return <>
+  return <div className="p-4 flex flex-col items-center text-center">
     <h1 className="my-5 text-3xl">Registrer kamp:</h1>
-    <h2 className="text-sm mb-8">For å registrere en kamp mot noen så må motspilleren din også ha logget inn en gang.</h2>
+    <h2 className="text-sm mb-8">Kun en spiller trenger registrere. For å registrere en kamp mot noen så må motspilleren din også ha logget inn en gang.</h2>
     <Form
       method="post"
       className="flex flex-col gap-7 items-start text-xl"
@@ -55,5 +55,5 @@ export function RegisterMatch({ session, users }: { session: Session, users: Use
         </>
       }
     </Form>
-  </>
+  </div>
 }

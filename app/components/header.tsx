@@ -3,7 +3,7 @@ import { authClient } from "~/lib/auth-client"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
 import { Separator } from "./ui/separator";
-import { MenuIcon } from "lucide-react";
+import { ExternalLinkIcon, MenuIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "./ui/drawer";
 import { ButtonGroup, ButtonGroupSeparator } from "./ui/button-group";
 import { useState } from "react";
@@ -65,7 +65,7 @@ export function Header({ avatarUrl, name }: { avatarUrl?: string | null, name: s
                 asChild
                 onClick={() => setMenuOpen(false)}
               >
-                <Link to="https://no.wikipedia.org/wiki/Elo-rating">Hva er Elo rating?</Link>
+                <Link to="https://no.wikipedia.org/wiki/Elo-rating" target="_blank">Hva er Elo rating? <ExternalLinkIcon /></Link>
               </Button>
               <ButtonGroupSeparator orientation="horizontal" />
               <Button
