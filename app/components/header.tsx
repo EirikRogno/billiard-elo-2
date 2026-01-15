@@ -56,7 +56,7 @@ export function Header({ avatarUrl, name }: { avatarUrl?: string | null, name: s
                 asChild
                 onClick={() => setMenuOpen(false)}
               >
-                <Link to="/history">Kamphistorikk</Link>
+                <Link to="/history">Din kamphistorikk</Link>
               </Button>
               <ButtonGroupSeparator orientation="horizontal" />
               <Button

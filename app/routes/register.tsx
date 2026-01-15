@@ -46,10 +46,6 @@ export async function action({ request, context }: Route.ActionArgs) {
     await db.update(schema.user).set({ eloRating: newEloPlayer }).where(eq(schema.user.id, userId));
     await db.update(schema.user).set({ eloRating: newEloOpponent }).where(eq(schema.user.id, opponentId));
 
-    console.log("eloDelta:", eloDelta)
-    console.log("New elo:", opponent.name, newEloOpponent);
-    console.log("New elo:", session?.user.name, newEloPlayer);
-
     return redirect("/")
   } catch (error) {
     console.error(error);
@@ -64,6 +60,7 @@ export async function loader({ context }: Route.LoaderArgs) {
   const users = await db.select({ name: schema.user.name, id: schema.user.id })
     .from(schema.user)
     .where(not(eq(schema.user.id, session?.user.id || "")))
+    .orderBy(schema.user.name);
 
   return {
     session,
