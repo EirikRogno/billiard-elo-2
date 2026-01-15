@@ -3,8 +3,7 @@ import type { Route } from "./+types/ratings";
 import { userContext } from "~/context";
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
-import { eq, and, not, desc, gt, gte, max, sql } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { eq, and, desc, gt, gte, max, sql } from "drizzle-orm";
 import { RatingsView } from "~/components/ratingsView";
 
 export function meta({ }: Route.MetaArgs) {
@@ -35,7 +34,6 @@ export async function loader({ context }: Route.LoaderArgs) {
 
     return {
       users,
-      session,
     };
   } catch (error) {
     console.error("Something went wrong getting ratings", error);
@@ -44,7 +42,6 @@ export async function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  console.log(loaderData.users);
   return (
     <RatingsView users={loaderData.users} />
   );

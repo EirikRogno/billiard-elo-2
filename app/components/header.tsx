@@ -60,6 +60,15 @@ export function Header({ avatarUrl, name }: { avatarUrl?: string | null, name: s
               </Button>
               <ButtonGroupSeparator orientation="horizontal" />
               <Button
+                variant="link"
+                asChild
+                onClick={() => setMenuOpen(false)}
+                className="my-4"
+              >
+                <Link to="/ratings">Topplisten</Link>
+              </Button>
+              <ButtonGroupSeparator orientation="horizontal" />
+              <Button
                 className="my-4"
                 variant="link"
                 asChild
