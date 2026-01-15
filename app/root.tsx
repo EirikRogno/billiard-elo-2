@@ -21,6 +21,30 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  {
+    rel: "manifest",
+    href: "manifest.json"
+  },
+  {
+    rel: "apple-touch-icon",
+    sizes: "167x167",
+    href: "icons/apple-touch-icon-167x167"
+  },
+  {
+    rel: "apple-touch-icon",
+    sizes: "180x180",
+    href: "icons/apple-touch-icon-180x180"
+  },
+  {
+    rel: "apple-touch-icon",
+    sizes: "152x152",
+    href: "icons/apple-touch-icon-152x152"
+  },
+  {
+    rel: "apple-touch-icon",
+    sizes: "120x120",
+    href: "icons/apple-touch-icon-120x120"
+  }
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {

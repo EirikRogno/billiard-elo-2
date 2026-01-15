@@ -6,6 +6,7 @@ import { authMiddleware } from "~/middleware/auth";
 import { WebstepPositiveLogo } from "~/components/logo/WebstepPositive";
 import { Header } from "~/components/header";
 import { Spinner } from "~/components/ui/spinner";
+import { WebstepBilliardLogo } from "~/components/logo/WebstepBilliardLogo";
 
 export async function loader({ context }: Route.LoaderArgs) {
   const session = context.get(userContext);
@@ -26,6 +27,6 @@ export default function Layout({ loaderData }: Route.ComponentProps) {
     <main className="grow flex flex-col justify-center items-center">
       {navigation.state === "idle" ? <Outlet /> : <Spinner />}
     </main>
-    <footer className="static bottom-0 bg-light-sky p-2"><div className="w-50"><WebstepPositiveLogo /></div></footer>
+    <footer className="static bottom-0 bg-light-sky p-5 flex justify-between"><div className="w-50"><WebstepPositiveLogo /></div><WebstepBilliardLogo className="size-15" /></footer>
   </div>)
 }
