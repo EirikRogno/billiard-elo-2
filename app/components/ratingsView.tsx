@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 type User = {
   user: typeof user.$inferSelect,
   matchCount: number;
+  matchWins: number;
   lastMatchDate: Date | null;
 }
 
@@ -15,15 +16,16 @@ export function RatingsView({ users }: { users: User[] }) {
     <Table className="max-w-4xl">
       <TableHeader>
         <TableRow className="font-extrabold">
-          <TableHead>Navn</TableHead>
-          <TableHead>Antall kamper</TableHead>
+          <TableHead>Spiller</TableHead>
+          <TableHead>Kamper</TableHead>
+          <TableHead>Winrate</TableHead>
           <TableHead>Elo rating</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map(({ user, matchCount }) => {
+        {users.map(({ user, matchCount, matchWins }) => {
           return <TableRow key={user.id}>
-            <TableCell className="flex flex-row items-center gap-2">
+            <TableCell className="flex flex-row items-center gap-4">
               <Avatar className="size-8">
                 <AvatarImage src={user.image || undefined} />
                 <AvatarFallback>{user.name.substring(0, 2)}</AvatarFallback>
@@ -31,6 +33,7 @@ export function RatingsView({ users }: { users: User[] }) {
               {user.name}
             </TableCell>
             <TableCell>{matchCount}</TableCell>
+            <TableCell>{Math.round(matchWins / matchCount * 100)} %</TableCell>
             <TableCell>{user.eloRating}</TableCell>
           </TableRow>
         })}

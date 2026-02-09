@@ -23,10 +23,12 @@ export async function loader({ context }: Route.LoaderArgs) {
     const users = await db.select({
       user: schema.user,
       matchCount: db.$count(schema.matchParticipant, eq(schema.user.id, schema.matchParticipant.userId)),
+      matchWins: db.$count(schema.match, eq(schema.match.winner, schema.user.id)),
       lastMatchDate: max(schema.matchParticipant.createdAt)
     })
       .from(schema.user)
       .leftJoin(schema.matchParticipant, eq(schema.matchParticipant.userId, schema.user.id))
+      .leftJoin(schema.match, eq(schema.match.id, schema.matchParticipant.matchId))
       .orderBy(desc(schema.user.eloRating))
       .groupBy(schema.user.id)
       .having(({ matchCount, lastMatchDate }) => and(gte(matchCount, 5), gt(lastMatchDate, sql`now() - '30 day'::interval`)))
