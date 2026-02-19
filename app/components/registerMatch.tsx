@@ -6,11 +6,12 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Spinner } from "~/components/ui/spinner";
 import type { Session } from "~/lib/auth.server";
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "./ui/combobox";
 
 type User = { name: string, id: string }
 
 export function RegisterMatch({ session, users }: { session: Session, users: User[] }) {
-  const [selectedOpponent, setSelectedOpponent] = useState<User>()
+  const [selectedOpponent, setSelectedOpponent] = useState<{ value: string, label: string } | null>()
   const navigation = useNavigation();
 
   return <div className="p-4 flex flex-col items-center text-center">
@@ -26,14 +27,19 @@ export function RegisterMatch({ session, users }: { session: Session, users: Use
       }}>
       <div>
         <Label className="text-bold text-lg mb-2">Motspiller</Label>
-        <Select name="opponentId" value={selectedOpponent?.id || ""} onValueChange={(value) => setSelectedOpponent(users.find(u => u.id === value))}>
-          <SelectTrigger className="w-45">
-            <SelectValue placeholder="Velg motspiller" />
-          </SelectTrigger>
-          <SelectContent>
-            {users.map(user => <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <Combobox name="opponentId" value={selectedOpponent || { value: "", label: "" }} onValueChange={(value) => setSelectedOpponent(value)} items={users.map((user) => ({ value: user.id, label: user.name }))}>
+          <ComboboxInput placeholder="Velg motspiller" />
+          <ComboboxContent>
+            <ComboboxEmpty>Ingen motspillere funnet</ComboboxEmpty>
+            <ComboboxList>
+              {(item) => (
+                <ComboboxItem key={item.value} value={item}>
+                  {item.label}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
       </div>
       {selectedOpponent &&
         <>
@@ -44,8 +50,8 @@ export function RegisterMatch({ session, users }: { session: Session, users: Use
               <Label htmlFor="r1" className="text-lg">{session.user.name}</Label>
             </div>
             <div className="flex items-center gap-3">
-              <RadioGroupItem value={selectedOpponent.id} id="r2" />
-              <Label className="text-lg" htmlFor="r2">{selectedOpponent.name}</Label>
+              <RadioGroupItem value={selectedOpponent.value} id="r2" />
+              <Label className="text-lg" htmlFor="r2">{selectedOpponent.label}</Label>
             </div>
           </RadioGroup>
           <Button disabled={navigation.state === "submitting"} variant="outline" type="submit">
