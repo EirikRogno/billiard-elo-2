@@ -6,6 +6,7 @@ export default [
     route("register", "routes/register.tsx"),
     route("history", "routes/history.tsx"),
     route("ratings", "routes/ratings.tsx"),
+    route("compare", "routes/compare.tsx"),
   ]),
   route("login", "routes/loginRoute.tsx"),
   route("api/auth/*", "routes/api.auth.ts")

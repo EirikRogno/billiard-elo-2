@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { user } from "database/schema";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
@@ -9,7 +10,8 @@ type User = {
   lastMatchDate: Date | null;
 }
 
-export function RatingsView({ users }: { users: User[] }) {
+export function RatingsView({ users, currentUserId }: { users: User[], currentUserId: string }) {
+  const navigate = useNavigate();
   return <>
     <h1 className="my-5 text-3xl">Topplisten:</h1>
     <h2 className="text-sm text-center mx-2 mb-8">For å havne på topplisten må du ha spillt minst 5 kamper, og ha spillt en kamp i løpet av de siste 30 dagene.</h2>
@@ -24,7 +26,12 @@ export function RatingsView({ users }: { users: User[] }) {
       </TableHeader>
       <TableBody>
         {users.map(({ user, matchCount, matchWins }) => {
-          return <TableRow key={user.id}>
+          const isCurrentUser = user.id === currentUserId;
+          return <TableRow
+            key={user.id}
+            className={!isCurrentUser ? "cursor-pointer hover:bg-muted/50" : ""}
+            onClick={!isCurrentUser ? () => navigate(`/compare?opponent=${user.id}`) : undefined}
+          >
             <TableCell className="flex flex-row items-center gap-4">
               <Avatar className="size-8">
                 <AvatarImage src={user.image || undefined} />

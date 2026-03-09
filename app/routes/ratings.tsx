@@ -36,6 +36,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 
     return {
       users,
+      session,
     };
   } catch (error) {
     console.error("Something went wrong getting ratings", error);
@@ -45,6 +46,6 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   return (
-    <RatingsView users={loaderData.users} />
+    <RatingsView users={loaderData.users} currentUserId={loaderData.session.user.id} />
   );
 }
